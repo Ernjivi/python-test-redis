@@ -1,0 +1,25 @@
+version: '3.5'
+services:
+  redis:
+    image: "${MEMDB_IMAGE}"
+    container_name: "${MEMDB_HOST}"
+    expose:
+      - "${MEMDB_PORT}"
+  app:
+    image: "${APP_IMAGE}"
+    command: sh -c "tail -f /dev/null"
+    container_name: "${APP_CONTAINER}"
+    env_file:
+      - .env
+    environment:
+      VIRTUAL_HOST: "${APP_CONTAINER}"
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - "${APP_VOLUME}"
+    working_dir: "${APP_WORKING_DIR}"
+    depends_on:
+      - redis
+networks:
+  default:
+    name: "${NETWORK}"
